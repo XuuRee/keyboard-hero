@@ -10,8 +10,10 @@ namespace PV178.Homeworks.HW03.Utils
     public class Reader : IDisposable
     {
         public string Text { get; set; }
+        public event EventHandler Handler;     // public static event ...
+        public int points { get; set; }               //
 
-        private const int Timeout = 300;
+        private const int Timeout = 800;    // 300
         private readonly Displayer displayer = new Displayer();
 
         private AutoResetEvent trackDone;
@@ -28,6 +30,7 @@ namespace PV178.Homeworks.HW03.Utils
                 trackDone = new AutoResetEvent(false);
                 checkingThread = new Thread(CheckInput) { IsBackground = true };
                 gettingThread = new Thread(GetInput) { IsBackground = true };
+                points = Text.Length;   //
             }
             else
             {
@@ -62,7 +65,14 @@ namespace PV178.Homeworks.HW03.Utils
         /// <param name="position">actual reading position</param>
         protected virtual void OnKeyPressed(char key, int position)
         {
-            throw new NotImplementedException();
+            // if (Handler != null) {} ...
+            EventHandler ev = Handler;
+            if (ev != null)
+            {
+                ev(this, new KeyPositionEventArgs(key, position));
+            }
+            //Handler?.Invoke(this, new KeyPositionEventArgs(key, position));  // Handler?.Invoke(...)
+            // Console.WriteLine("Key pressed!\nkey {0}, position {1}", key, position);   
         }
 
         /// <summary>
@@ -71,7 +81,8 @@ namespace PV178.Homeworks.HW03.Utils
         /// <param name="position">actual reading position</param>
         protected virtual void OnKeyNotPressed(int position)
         {
-            throw new NotImplementedException();
+            Handler?.Invoke(this, new KeyPositionEventArgs(position));
+            // Console.WriteLine("Key not pressed!\nposition {0}", position);
         }
 
         /// <summary>
@@ -91,11 +102,19 @@ namespace PV178.Homeworks.HW03.Utils
                 if (input != null)
                 {
                     OnKeyPressed((char)input, i);
+                    if (Text[i] != (char)input)     //
+                    {                               //
+                        points -= 1;                //
+                    }                               //
                     input = null;
                 }
                 else
                 {
                     OnKeyNotPressed(i);
+                    if (Text[i] != ' ')             //
+                    {                               //
+                        points -= 1;                //
+                    }                               //
                 }
             }
             trackDone.Set();
@@ -111,9 +130,26 @@ namespace PV178.Homeworks.HW03.Utils
                 input = Console.ReadKey(true).KeyChar;
                 if (input != null && !end)
                 {
-                    Sounder.MakeSound(400);
+                    Sounder.MakeSound(Timeout);
                 }
             }
+        }
+    }
+
+    public class KeyPositionEventArgs : EventArgs
+    {
+        private readonly char? key;     // public char? key; + public int position
+        private readonly int position;
+
+        public KeyPositionEventArgs(int position)
+            : this(null, position)
+        {
+        }
+
+        public KeyPositionEventArgs(char? key, int position)
+        {
+            this.key = key;
+            this.position = position;
         }
     }
 }

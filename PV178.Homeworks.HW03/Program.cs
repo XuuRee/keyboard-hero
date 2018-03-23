@@ -4,6 +4,8 @@
     {
         static void Main(string[] args)
         {
+            ImplementedGame game = new ImplementedGame();
+            game.Start();
         }
     }
 }
