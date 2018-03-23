@@ -30,11 +30,11 @@ namespace PV178.Homeworks.HW03
                     continue;
                 }
             }
-            this.Points = reader.Text.Length;
+            Points = reader.Text.Length;
             reader.Handler += HandlePoints;
             reader.ReadKeys();
             reader.Dispose();
-            Console.WriteLine("End! Your points: {0}", this.Points);
+            Console.WriteLine("End! Your points: {0}", Points);
             Console.ReadLine();
         }
 

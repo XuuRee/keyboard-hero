@@ -14,7 +14,8 @@ namespace PV178.Homeworks.HW03.Utils
         public string Text { get; set; }
         public event _Delegate Handler;
 
-        private const int Timeout = 800;    // 300
+        private Piano piano;
+        private const int Timeout = 500;    // 300
         private readonly Displayer displayer = new Displayer();
 
         private AutoResetEvent trackDone;
@@ -31,7 +32,7 @@ namespace PV178.Homeworks.HW03.Utils
                 trackDone = new AutoResetEvent(false);
                 checkingThread = new Thread(CheckInput) { IsBackground = true };
                 gettingThread = new Thread(GetInput) { IsBackground = true };
-                //points = Text.Length;   //
+                piano = new Piano();
             }
             else
             {
@@ -70,9 +71,7 @@ namespace PV178.Homeworks.HW03.Utils
             {
                 Handler(this, new KeyPositionEventArgs(key, position));
             }
-            // if (Handler != null) {} ...
-            //Handler?.Invoke(this, new KeyPositionEventArgs(key, position));  // Handler?.Invoke(...)
-            // Console.WriteLine("Key pressed!\nkey {0}, position {1}", key, position);   
+            //Handler?.Invoke(this, new KeyPositionEventArgs(key, position));  
         }
 
         /// <summary>
@@ -86,7 +85,6 @@ namespace PV178.Homeworks.HW03.Utils
                 Handler(this, new KeyPositionEventArgs(position));
             }
             //Handler?.Invoke(this, new KeyPositionEventArgs(position));
-            // Console.WriteLine("Key not pressed!\nposition {0}", position);
         }
 
         /// <summary>
@@ -126,7 +124,7 @@ namespace PV178.Homeworks.HW03.Utils
                 input = Console.ReadKey(true).KeyChar;
                 if (input != null && !end)
                 {
-                    Sounder.MakeSound(Timeout);
+                    Sounder.MakeSound(piano.PlayTone((char)input));
                 }
             }
         }
@@ -134,7 +132,7 @@ namespace PV178.Homeworks.HW03.Utils
 
     public class KeyPositionEventArgs : EventArgs
     {
-        public char? key;     // private readonly / public char? key; + public int position
+        public char? key;
         public int position;
 
         public KeyPositionEventArgs(int position)
