@@ -9,6 +9,8 @@ namespace PV178.Homeworks.HW03
 {
     class ImplementedGame : IGame
     {
+        private int Points { get; set; }
+
         public void Start()
         {
             Reader reader;
@@ -28,16 +30,30 @@ namespace PV178.Homeworks.HW03
                     continue;
                 }
             }
+            this.Points = reader.Text.Length;
+            reader.Handler += HandlePoints;
             reader.ReadKeys();
-            reader.Handler += HandleSomethingHappening;
             reader.Dispose();
-            Console.WriteLine("End! Your points: {0}", reader.points);
+            Console.WriteLine("End! Your points: {0}", this.Points);
             Console.ReadLine();
         }
 
-        public void HandleSomethingHappening(object sender, EventArgs e)
+        public void HandlePoints(Reader sender, KeyPositionEventArgs kpea)
         {
-            Console.WriteLine("Something happened!");
+            if (kpea.key == null)
+            {
+                if (sender.Text[kpea.position] != ' ')
+                {
+                    Points -= 1;
+                }
+            }
+            else
+            {
+                if (sender.Text[kpea.position] != kpea.key)
+                {
+                    Points -= 1;
+                }
+            }
         }
     }
 }
