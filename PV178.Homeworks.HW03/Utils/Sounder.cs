@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Media;
 using System.Threading;
 
 namespace PV178.Homeworks.HW03.Utils
@@ -17,6 +18,40 @@ namespace PV178.Homeworks.HW03.Utils
         {
             ThreadPool.QueueUserWorkItem(state =>
                 Console.Beep(frequency, duration));
+        }
+
+        public static void MakeCoolSound(char key)
+        {
+            SoundPlayer player;
+            string path = @"..\..\Sounds\";
+            switch (key)
+            {
+                case 'a':
+                    player = new SoundPlayer(path + "piano-a.wav");
+                    break;
+                case 'd':
+                    player = new SoundPlayer(path + "piano-d.wav");
+                    break;
+                case 'f':
+                    player = new SoundPlayer(path + "piano-f.wav");
+                    break;
+                case 'g':
+                    player = new SoundPlayer(path + "piano-g.wav");
+                    break;
+                case 'h':
+                    player = new SoundPlayer(path + "piano-h.wav");
+                    break;
+                case 'j':
+                    player = new SoundPlayer(path + "piano-j.wav");
+                    break;
+                case 's':
+                    player = new SoundPlayer(path + "piano-s.wav");
+                    break;
+                default:
+                    player = new SoundPlayer();
+                    break;
+            }
+            player.Play();
         }
     }
 }

@@ -124,7 +124,8 @@ namespace PV178.Homeworks.HW03.Utils
                 input = Console.ReadKey(true).KeyChar;
                 if (input != null && !end)
                 {
-                    Sounder.MakeSound(piano.PlayTone((char)input));
+                    //Sounder.MakeSound(piano.PlayTone((char)input));
+                    Sounder.MakeCoolSound((char)input);
                 }
             }
         }
