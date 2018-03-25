@@ -20,38 +20,43 @@ namespace PV178.Homeworks.HW03.Utils
                 Console.Beep(frequency, duration));
         }
 
+        /// <summary>
+        /// Makes sound with given .wav file.
+        /// </summary>
+        /// <param name="key">key</param>
         public static void MakeCoolSound(char key)
         {
-            SoundPlayer player;
             string path = @"..\..\Sounds\";
+            SoundPlayer player = ChoosePianoTone(key, path);
+            player.Play();
+        }
+
+        /// <summary>
+        /// Choose piano tone with given key.
+        /// </summary>
+        /// <param name="key">key</param>
+        /// /// <param name="path">path</param>
+        private static SoundPlayer ChoosePianoTone(char key, string path)
+        {
             switch (key)
             {
                 case 'a':
-                    player = new SoundPlayer(path + "piano-a.wav");
-                    break;
+                    return new SoundPlayer(path + "piano-a.wav");
                 case 'd':
-                    player = new SoundPlayer(path + "piano-d.wav");
-                    break;
+                    return new SoundPlayer(path + "piano-d.wav");
                 case 'f':
-                    player = new SoundPlayer(path + "piano-f.wav");
-                    break;
+                    return new SoundPlayer(path + "piano-f.wav");
                 case 'g':
-                    player = new SoundPlayer(path + "piano-g.wav");
-                    break;
+                    return new SoundPlayer(path + "piano-g.wav");
                 case 'h':
-                    player = new SoundPlayer(path + "piano-h.wav");
-                    break;
+                    return new SoundPlayer(path + "piano-h.wav");
                 case 'j':
-                    player = new SoundPlayer(path + "piano-j.wav");
-                    break;
+                    return new SoundPlayer(path + "piano-j.wav");
                 case 's':
-                    player = new SoundPlayer(path + "piano-s.wav");
-                    break;
+                    return new SoundPlayer(path + "piano-s.wav");
                 default:
-                    player = new SoundPlayer();
-                    break;
+                    return new SoundPlayer();
             }
-            player.Play();
         }
     }
 }

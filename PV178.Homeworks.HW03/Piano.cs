@@ -6,25 +6,35 @@ using System.Threading.Tasks;
 
 namespace PV178.Homeworks.HW03
 {
+    /// <summary>
+    /// Represents piano with stored tones.
+    /// </summary>
     public class Piano
     {
-        public Dictionary<char, Tone> dictionary;
+        public Dictionary<char, Tone> PianoDict { get; set; }
 
         public Piano()
         {
-            this.dictionary = new Dictionary<char, Tone> {};
-            this.dictionary.AddRange(CreatePianoList());
-        }
-        
-        public int PlayTone(char key)
-        {
-            if (dictionary.ContainsKey(key))
-            {
-                return dictionary[key].Frequency;
-            }
-            return 0;
+            this.PianoDict = new Dictionary<char, Tone> {};
+            this.PianoDict.AddRange(CreatePianoList());
         }
 
+        /// <summary>
+        /// Play tone that corresponds with given key.
+        /// </summary>
+        /// <param name="key">keyboard key</param>
+        public int PlayTone(char key)
+        {
+            if (PianoDict.ContainsKey(key))
+            {
+                return PianoDict[key].Frequency;
+            }
+            return 37;      // Console.Beep = 37 až 32767 Hz
+        }
+
+        /// <summary>
+        /// Create list with given keys and tones.
+        /// </summary>
         private List<KeyValuePair<char, Tone>> CreatePianoList()
         {
             var list = new List<KeyValuePair<char, Tone>>()

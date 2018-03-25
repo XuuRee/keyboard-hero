@@ -6,11 +6,14 @@ using System.Threading.Tasks;
 
 namespace PV178.Homeworks.HW03
 {
+    /// <summary>
+    /// Represents tone with name and frequency.
+    /// </summary>
     public struct Tone
     {
         public string Name { get; set; }
         public int Frequency { get; set; }
-
+        
         public Tone(string name, int frequency)
         {
             this.Name = name;
@@ -19,7 +22,7 @@ namespace PV178.Homeworks.HW03
 
         public override String ToString()
         {
-            return "Tone name: " + Name;
+            return Name + " (" + Frequency + " Hz)";
         }
     }
 }

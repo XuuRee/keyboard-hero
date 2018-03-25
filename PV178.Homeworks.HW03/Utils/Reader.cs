@@ -4,7 +4,7 @@ using System.Threading;
 
 namespace PV178.Homeworks.HW03.Utils
 {
-    public delegate void _Delegate(Reader sender, KeyPositionEventArgs kpea);
+    public delegate void Delegate(Reader sender, KeyPositionEventArgs kpea);
 
     /// <summary>
     /// Class responsible for reading songs from textfiles and handling user input.
@@ -12,8 +12,9 @@ namespace PV178.Homeworks.HW03.Utils
     public class Reader : IDisposable
     {
         public string Text { get; set; }
-        public event _Delegate Handler;
+        public event Delegate Handler;
 
+        private Boolean paid;
         private Piano piano;
         private const int Timeout = 500;    // 300
         private readonly Displayer displayer = new Displayer();
@@ -24,7 +25,7 @@ namespace PV178.Homeworks.HW03.Utils
         private char? input;
         private bool end;
 
-        public Reader(string songName)
+        public Reader(string songName, Boolean paidVersion)
         {
             if (File.Exists(@"..\..\Songs\" + songName + ".txt"))
             {
@@ -33,6 +34,7 @@ namespace PV178.Homeworks.HW03.Utils
                 checkingThread = new Thread(CheckInput) { IsBackground = true };
                 gettingThread = new Thread(GetInput) { IsBackground = true };
                 piano = new Piano();
+                paid = paidVersion;
             }
             else
             {
@@ -67,11 +69,7 @@ namespace PV178.Homeworks.HW03.Utils
         /// <param name="position">actual reading position</param>
         protected virtual void OnKeyPressed(char key, int position)
         {
-            if (Handler != null)
-            {
-                Handler(this, new KeyPositionEventArgs(key, position));
-            }
-            //Handler?.Invoke(this, new KeyPositionEventArgs(key, position));  
+            Handler?.Invoke(this, new KeyPositionEventArgs(key, position));
         }
 
         /// <summary>
@@ -80,11 +78,7 @@ namespace PV178.Homeworks.HW03.Utils
         /// <param name="position">actual reading position</param>
         protected virtual void OnKeyNotPressed(int position)
         {
-            if (Handler != null)
-            {
-                Handler(this, new KeyPositionEventArgs(position));
-            }
-            //Handler?.Invoke(this, new KeyPositionEventArgs(position));
+            Handler?.Invoke(this, new KeyPositionEventArgs(position));
         }
 
         /// <summary>
@@ -124,17 +118,26 @@ namespace PV178.Homeworks.HW03.Utils
                 input = Console.ReadKey(true).KeyChar;
                 if (input != null && !end)
                 {
-                    //Sounder.MakeSound(piano.PlayTone((char)input));
-                    Sounder.MakeCoolSound((char)input);
+                    if (paid)
+                    {
+                        Sounder.MakeCoolSound((char)input);
+                    }
+                    else
+                    {
+                        Sounder.MakeSound(piano.PlayTone((char)input));
+                    }
                 }
             }
         }
     }
 
+    /// <summary>
+    /// Event with key and position arguments.
+    /// </summary>
     public class KeyPositionEventArgs : EventArgs
     {
-        public char? key;
-        public int position;
+        public char? Key { get; set; }
+        public int Position { get; set; }
 
         public KeyPositionEventArgs(int position)
             : this(null, position)
@@ -143,8 +146,8 @@ namespace PV178.Homeworks.HW03.Utils
 
         public KeyPositionEventArgs(char? key, int position)
         {
-            this.key = key;
-            this.position = position;
+            this.Key = key;
+            this.Position = position;
         }
     }
 }
